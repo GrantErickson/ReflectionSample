@@ -94,9 +94,9 @@ namespace ReflectionSample.Tests
         {
             Assembly rs = Assembly.Load("ReflectionSample");
             Assert.AreEqual("ReflectionSample", rs.GetName().Name);
-            Assert.AreEqual("SpecialClass", rs.GetTypes().First().Name);
-            Assert.AreEqual("IAdder", rs.GetTypes().Skip(1).First().Name);
-            Assert.AreEqual("PrivateAdder", rs.GetTypes().Skip(2).First().Name);
+            Assert.IsTrue(rs.GetTypes().Any(f => f.Name == "SpecialClass"));
+            Assert.IsTrue(rs.GetTypes().Any(f => f.Name == "IAdder"));
+            Assert.IsTrue(rs.GetTypes().Any(f => f.Name == "PrivateAdder"));
             //Assert.AreEqual("<PrivateImplementationDetails>", rs.GetTypes().Skip(3).First().Name);
             Assert.AreEqual(2, rs.GetTypes().Count(f=>f.GetInterfaces().Contains(typeof(IAdder))));
         }
