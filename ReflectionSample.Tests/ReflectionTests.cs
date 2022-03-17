@@ -18,16 +18,16 @@ namespace ReflectionSample.Tests
             var tsb = sb.GetType();
             Assert.AreEqual(t.Name, tsb.Name);
             Assert.AreSame(t, tsb);
-            Assert.AreEqual(0, t.GetFields().Count());
-            Assert.AreEqual(6, t.GetConstructors().Count());
-            Assert.AreEqual(1, t.GetConstructors().Skip(1).First().GetParameters().Count());
-            Assert.AreEqual(1, t.GetInterfaces().Count());
+            Assert.AreEqual(0, t.GetFields().Length);
+            Assert.AreEqual(6, t.GetConstructors().Length);
+            Assert.AreEqual(1, t.GetConstructors().Skip(1).First().GetParameters().Length);
+            Assert.AreEqual(1, t.GetInterfaces().Length);
             Assert.AreEqual("ISerializable", t.GetInterfaces().First().Name);
-            Assert.AreEqual(99, t.GetMembers().Count());
-            Assert.AreEqual(4, t.GetProperties().Count());
+            Assert.AreEqual(99, t.GetMembers().Length);
+            Assert.AreEqual(4, t.GetProperties().Length);
             Assert.AreEqual(typeof(object), t.BaseType);
             Assert.AreEqual(null, t.BaseType!.BaseType);
-            Assert.AreEqual(5, t.GetCustomAttributes(true).Count());
+            Assert.AreEqual(5, t.GetCustomAttributes(true).Length);
         }
 
 
@@ -36,7 +36,7 @@ namespace ReflectionSample.Tests
         {
             var t = typeof(StringBuilder);
 
-            dynamic sb = System.Activator.CreateInstance(t);
+            dynamic sb = System.Activator.CreateInstance(t)!;
             Assert.AreEqual(16, sb.Capacity);
             sb!.Append("Test");
             sb!.Append("123");
@@ -57,14 +57,14 @@ namespace ReflectionSample.Tests
             Assert.AreEqual(4, sb.Length);
             t.GetMethod("Clear")!.Invoke(sb, null);
             Assert.AreEqual(0, sb.Length);
-            var appendString = t.GetMethods().First(f=>f.Name == "Append" && f.GetParameters().Count() == 1 && f.GetParameters().First().ParameterType == typeof(string));
+            var appendString = t.GetMethods().First(f=>f.Name == "Append" && f.GetParameters().Length == 1 && f.GetParameters().First().ParameterType == typeof(string));
             appendString.Invoke(sb, new object[] { "Test" });
             Assert.AreEqual(4, sb.Length);
             Assert.ThrowsException<ArgumentException>(() =>
             {
                 appendString.Invoke(sb, new object[] { 4 });
             });
-            var appendInt = t.GetMethods().First(f => f.Name == "Append" && f.GetParameters().Count() == 1 && f.GetParameters().First().ParameterType == typeof(int));
+            var appendInt = t.GetMethods().First(f => f.Name == "Append" && f.GetParameters().Length == 1 && f.GetParameters().First().ParameterType == typeof(int));
             appendInt.Invoke(sb, new object[] { 4 }); 
             Assert.AreEqual("Test4", sb.ToString());
         }
